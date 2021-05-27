@@ -1,0 +1,14 @@
+.sidebar-title {
+	font-size: 0.75rem !important;
+	opacity: 0.66;
+}
+.warning-banner {
+	color: #dc3545;
+	margin: 0.25rem;
+	border-radius: 8px;
+	padding: 0.66rem;
+	background-color: rgba(125, 0, 0, 0.08);
+}
+.disabled-hover {
+	cursor: disabled;
+}

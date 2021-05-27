@@ -22,7 +22,7 @@
 		.spi-logo{
 			margin: auto;
 		}
-	</style
+	</style>
 </head>
 <body>
 <div id="app">
@@ -125,6 +125,7 @@
 		</footer>
 	</div>
 </div>
+<?=$this->load->view('main/globals/scripts.php');?>
 <script src="<?=base_url()?>/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="<?=base_url()?>/assets/js/bootstrap.bundle.min.js"></script>
 <script src="<?=base_url()?>/assets/js/main.js"></script>

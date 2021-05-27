@@ -1,53 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Attendance - SPI SYSTEM</title>
+$globalHeader;
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/css/bootstrap.css">
 
-	<link rel="stylesheet" href="<?=base_url()?>/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/vendors/bootstrap-icons/bootstrap-icons.css">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/css/app.css">
-	<link rel="shortcut icon" href="<?=base_url()?>/assets/images/favicon.svg" type="image/x-icon">
+?>
+<style>
+	.spi-logo{
+		margin: auto;
+	}
 
-	<style>
-		.spi-logo{
-			margin: auto;
-		}
+	#clock{
+		font-size: 3.2rem;
+		font-weight: bolder;
+	}
 
-		#clock{
-			font-size: 3.2rem;
-			font-weight: bolder;
-		}
-
-		#salutation {
-			font-size: 2.2rem;
-		}
-	</style
+	#salutation {
+		font-size: 2.2rem;
+	}
+</style>
 </head>
 <body>
 <div id="app">
-	<div id="sidebar" class="active">
-		<div class="sidebar-wrapper active">
-			<div class="sidebar-header">
-				<div class="d-flex justify-content-between">
-					<div class="logo spi-logo">
-						<a href="index.html">SPI SYSTEM</a>
-					</div>
-					<div class="toggler">
-						<a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-					</div>
-				</div>
-			</div>
-			<?php $this->load->view('employee/template/sidebar') ?>
-			<button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
-		</div>
-	</div>
+	<?php $this->load->view('employee/template/sidebar') ?>
 	<div id="main">
 		<header class="mb-3">
 			<a href="#" class="burger-btn d-block d-xl-none">
@@ -76,7 +50,7 @@
 				<div class="card">
 					<div class="card-header">
 						<div class="row" style="text-align: center">
-							<h4 class="card-title" id="salutation">Good Morning, Christopher John!</h4>
+							<h4 class="card-title" id="salutation">Good Morning, <?=$userName?>!</h4>
 						</div>
 					</div>
 					<div class="card-body">
@@ -90,10 +64,15 @@
 							<div class="col-12 col-md-5">
 							</div>
 							<div class="col-12 col-md-2">
-								<a href="#" class="btn btn-xl btn-success btn-block" >CLOCK IN</a>
+								<button type="button" class="clock-btn btn btn-xl btn-success btn-block" >CLOCK IN</button>
 							</div>
 							<div class="col-12 col-md-5">
 							</div>
+						</div>
+						<div class="row clock-banners clock-failed-banner" style="display: none;">
+							<span class="text-center warning-banner">
+								<i class="bi bi-exclamation-diamond-fill"></i> Error connecting to database server. Please check your internet connection and try again!
+							</span>
 						</div>
 						<div class="row" style="text-align: center; margin-top: 20px">
 							<h4 class="card-title text-subtitle text-muted">Last Clock Out at 10:10 PM
@@ -101,7 +80,7 @@
 						</div>
 
 						<div class="row" style="text-align: center; margin-top: 20px">
-							<h4 class="card-title"><a href="<?=base_url()?>/employee/attendanceLog">View Time Log</a></h4>
+							<h4 class="card-title"><a href="<?=base_url()?>/employee/log">View Time Log</a></h4>
 						</div>
 
 
@@ -123,19 +102,90 @@
 		</footer>
 	</div>
 </div>
+<?php $this->load->view('main/globals/scripts.php'); ?>
 <script src="<?=base_url()?>/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="<?=base_url()?>/assets/js/bootstrap.bundle.min.js"></script>
 <script src="<?=base_url()?>/assets/js/main.js"></script>
 <script src="<?=base_url()?>/assets/js/jquery.js"></script>
 <script src="<?=base_url()?>/assets/js/moment.min.js"></script>
 <script type="text/javascript">
-	function clock() {
-		let $date = new Date;
-		$("#clock").text(moment($date).format('LTS'));
-		$("#dateToday").text(moment($date).format('dddd MMM D, YYYY'));
-
+var isClockIn = true;
+function clock() {
+	let $date = new Date;
+	$("#clock").text(moment($date).format('LTS'));
+	$("#dateToday").text(moment($date).format('dddd - MMM D, YYYY'));
+	let clockDate = moment($date).format('MMM D, YYYY');
+	let clockTime = moment($date).format('LTS');
+	let clockDay = moment($date).format('dddd');
+	$('.clock-btn').data('date', clockDate);
+	$('.clock-btn').data('time', clockTime);
+	$('.clock-btn').data('day', clockDay);
+	// if (isClockIn) {
+	// 	isClockIn = false;
+	// } else {
+	// 	isClockIn = true;
+	// }
+	// refreshClockButton(isClockIn);
+}
+function refreshClockButton(isClockIn) {
+	if (isClockIn) {
+		$('.clock-btn').removeClass('btn-primary');
+		$('.clock-btn').addClass('btn-success');
+		$('.clock-btn').data('type', '1');
+		$('.clock-btn').html('CLOCK IN');
+	} else {
+		$('.clock-btn').removeClass('btn-success');
+		$('.clock-btn').addClass('btn-primary');
+		$('.clock-btn').data('type', '0');
+		$('.clock-btn').html('CLOCK OUT');
 	}
-	setInterval(clock, 1000);
+}
+setInterval(clock, 1000);
+
+$(document).ready(function() {
+	clock();
+	refreshClockButton(isClockIn);
+
+	$('.clock-btn').on('click', function() {
+		$('.clock-banners').fadeOut();
+		$(this).attr('disabled', true);
+		$(this).addClass('disabled-hover');
+		let date = $(this).data('date');
+		let time = $(this).data('time');
+		let day = $(this).data('day');
+		let logType = $(this).data('type');
+		$(this).html('<i class="spinner-border spinner-border-sm text-muted"></i>');
+		$.ajax({
+			url: "<?php echo base_url() . 'AJAX_setAttendance';?>",
+			method: "POST",
+			data: {date: date, time: time, day: day, logType: logType},
+			dataType: "html",
+			success: function(response){
+				console.log(response);
+				$('.clock-banners').fadeOut();
+				let logTypeAfter;
+				if (logType == 1) {
+					logTypeAfter = 0;
+				} else {
+					logTypeAfter = 1;
+				}
+				refreshClockButton(logTypeAfter);
+				$('.clock-btn').attr('disabled', false);
+				$('.clock-btn').removeClass('disabled-hover');
+			},
+			error: function(xhr, textStatus, error){
+				$('.clock-banners').fadeOut();
+				$('.clock-failed-banner').fadeIn();
+				console.log(xhr.statusText);
+				console.log(textStatus);
+				console.log(error);
+				refreshClockButton(logType);
+				$('.clock-btn').attr('disabled', false);
+				$('.clock-btn').removeClass('disabled-hover');
+			}
+		});
+	});
+});
 </script>
 </body>
 
