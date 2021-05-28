@@ -34,4 +34,20 @@ class AJAX extends CI_Controller {
 			};
 		}
 	}
+	public function AJAX_setAttendanceComment()
+	{
+		$id = $this->input->post('id');
+		$value = $this->input->post('value');
+		$userID = 'N/A';
+		if ($this->session->userdata('UserID')) {
+			$userID = $this->session->userdata('UserID');
+		}
+		echo $id . '<br>' . $value . '<br>' . $userID;
+		if ($id != NULL && $value != NULL && $userID != NULL) {
+			$updateAttendanceComment = $this->Model_Inserts->UpdateAttendanceComment($userID, $id, $value);
+			if ($updateAttendanceComment) {
+
+			};
+		}
+	}
 }

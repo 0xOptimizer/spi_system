@@ -58,3 +58,4 @@ $route['employee'] = 'Employee';
 $route['employee/log'] = 'Employee/attendanceLog';
 
 $route['AJAX_setAttendance'] = 'AJAX/AJAX_setAttendance';
+$route['AJAX_setAttendanceComment'] = 'AJAX/AJAX_setAttendanceComment';

@@ -17,12 +17,14 @@ class Employee extends CI_Controller {
 	{
 		$data = [];
 		$data = array_merge($data, $this->userData);
-		$header['pageTitle'] = 'Attendance - SPI SYSTEM';
+		$header['pageTitle'] = 'Your Attendance - SPI';
 		$data['globalHeader'] = $this->load->view('main/globals/header', $header);
 		$this->load->view('employee/Attendance', $data);
 	}
 	public function attendanceLog()
 	{
-		$this->load->view('employee/AttendanceLog');
+		$header['pageTitle'] = 'Your Attendance Log - SPI';
+		$data['globalHeader'] = $this->load->view('main/globals/header', $header);
+		$this->load->view('employee/AttendanceLog', $data);
 	}
 }

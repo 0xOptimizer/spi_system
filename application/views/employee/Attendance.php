@@ -2,6 +2,33 @@
 
 $globalHeader;
 
+$userID = 'N/A';
+if ($this->session->userdata('UserID')) {
+	$userID = $this->session->userdata('UserID');
+}
+$clockType = 1;
+$lastClockMessage = 'You have no attendance records yet!';
+$getLatestAttendance = $this->Model_Selects->GetLatestAttendance($userID);
+if ($getLatestAttendance->num_rows() > 0) {
+	foreach($getLatestAttendance->result_array() as $row) {
+		$lastClockDate = $row['Date'];
+		$lastClockTime = $row['Time'];
+		$lastClockDay = $row['Day'];
+		$lastClockType = $row['LogType'];
+		$lastClockTypeText = '';
+		if ($lastClockType == 1) {
+			$lastClockTypeText = 'In';
+			$clockType = 0;
+		} else {
+			$lastClockTypeText = 'Out';
+			$clockType = 1;
+		}
+		$lastClockMessage = 'Error fetching your last attendance record.';
+		if ($lastClockDate != NULL || $lastClockTime != NULL || $lastClockDay != NULL || $lastClockType != NULL) {
+			$lastClockMessage = 'Last Clock ' . $lastClockTypeText . ' at ' . $lastClockTime . ' on ' . $lastClockDay . ', ' . $lastClockDate;
+		}
+	}
+}
 
 ?>
 <style>
@@ -71,16 +98,15 @@ $globalHeader;
 						</div>
 						<div class="row clock-banners clock-failed-banner" style="display: none;">
 							<span class="text-center warning-banner">
-								<i class="bi bi-exclamation-diamond-fill"></i> Error connecting to database server. Please check your internet connection and try again!
+								<i class="bi bi-exclamation-diamond-fill"></i> Error connecting to the database server. Please check your internet connection and try again!
 							</span>
 						</div>
 						<div class="row" style="text-align: center; margin-top: 20px">
-							<h4 class="card-title text-subtitle text-muted">Last Clock Out at 10:10 PM
-								Wednesday Feb 24, 2021</h4>
+							<h4 class="card-title text-subtitle text-muted last-clock-message"><?=$lastClockMessage?></h4>
 						</div>
 
 						<div class="row" style="text-align: center; margin-top: 20px">
-							<h4 class="card-title"><a href="<?=base_url()?>/employee/log">View Time Log</a></h4>
+							<h4 class="card-title"><a href="<?=base_url()?>employee/log">View Time Log</a></h4>
 						</div>
 
 
@@ -109,7 +135,11 @@ $globalHeader;
 <script src="<?=base_url()?>/assets/js/jquery.js"></script>
 <script src="<?=base_url()?>/assets/js/moment.min.js"></script>
 <script type="text/javascript">
-var isClockIn = true;
+<?php if ($clockType == 1): ?>
+	var isClockIn = true;
+<?php else: ?>
+	var isClockIn = false;
+<?php endif; ?>
 function clock() {
 	let $date = new Date;
 	$("#clock").text(moment($date).format('LTS'));
@@ -141,7 +171,7 @@ function refreshClockButton(isClockIn) {
 	}
 }
 setInterval(clock, 1000);
-
+$('.sidebar-employee-attendance').addClass('active');
 $(document).ready(function() {
 	clock();
 	refreshClockButton(isClockIn);
@@ -164,14 +194,19 @@ $(document).ready(function() {
 				console.log(response);
 				$('.clock-banners').fadeOut();
 				let logTypeAfter;
+				let logTypeText = '';
 				if (logType == 1) {
-					logTypeAfter = 0;
+					logTypeText = 'In';
+					logTypeAfter = false;
 				} else {
-					logTypeAfter = 1;
+					logTypeText = 'Out';
+					logTypeAfter = true;
 				}
 				refreshClockButton(logTypeAfter);
 				$('.clock-btn').attr('disabled', false);
 				$('.clock-btn').removeClass('disabled-hover');
+				let clockMessage = 'Last Clock ' + logTypeText + ' at ' + time + ' on ' + day + ', ' + date;
+				$('.last-clock-message').html(clockMessage);
 			},
 			error: function(xhr, textStatus, error){
 				$('.clock-banners').fadeOut();
@@ -179,7 +214,14 @@ $(document).ready(function() {
 				console.log(xhr.statusText);
 				console.log(textStatus);
 				console.log(error);
-				refreshClockButton(logType);
+				let logTypeValue;
+				if (logType == 1) {
+					logTypeValue = true; 
+				} else {
+					logTypeValue = false;
+				}
+				console.log(logTypeValue);
+				refreshClockButton(logTypeValue);
 				$('.clock-btn').attr('disabled', false);
 				$('.clock-btn').removeClass('disabled-hover');
 			}

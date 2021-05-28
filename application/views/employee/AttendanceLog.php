@@ -1,47 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+$globalHeader;
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Attendance - SPI SYSTEM</title>
+$userID = 'N/A';
+if ($this->session->userdata('UserID')) {
+	$userID = $this->session->userdata('UserID');
+}
+$getEmployeeAttendance = $this->Model_Selects->GetEmployeeAttendance($userID);
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/css/bootstrap.css">
-
-	<link rel="stylesheet" href="<?=base_url()?>/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/vendors/bootstrap-icons/bootstrap-icons.css">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/css/app.css">
-	<link rel="shortcut icon" href="<?=base_url()?>/assets/images/favicon.svg" type="image/x-icon">
+?>
 
 	<link rel="stylesheet" href="<?=base_url()?>/assets/vendors/simple-datatables/style.css">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/css/app.css">
 	<link rel="stylesheet" href="<?=base_url()?>/assets/css/daterangepicker.min.css">
 	<style>
 		.spi-logo{
 			margin: auto;
 		}
+		input {
+			color: inherit;
+			background-color: transparent;
+			border: none;
+			border-color: transparent;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			margin-left: -0.2rem;
+			padding: 0.2rem;
+		}
+		input[type]:focus {
+			padding: 0.2rem;
+			border-radius: 6px;
+			outline: none;
+			box-shadow: none !important;
+			background-color: rgba(0, 0, 0, 0.08);
+		}
 	</style>
 </head>
 <body>
 <div id="app">
-	<div id="sidebar" class="active">
-		<div class="sidebar-wrapper active">
-			<div class="sidebar-header">
-				<div class="d-flex justify-content-between">
-					<div class="logo spi-logo">
-						<a href="index.html">SPI SYSTEM</a>
-					</div>
-					<div class="toggler">
-						<a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-					</div>
-				</div>
-			</div>
-			<?php $this->load->view('employee/template/sidebar') ?>
-			<button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
-		</div>
-	</div>
+	<?php $this->load->view('employee/template/sidebar') ?>
 	<div id="main">
 		<header class="mb-3">
 			<a href="#" class="burger-btn d-block d-xl-none">
@@ -69,7 +65,7 @@
 			<section class="section">
 				<div class="card">
 					<div class="card-header" style="text-align: right">
-						<a href="<?=base_url()?>/employee/">Go Back</a>
+						<a href="<?=base_url()?>employee/">Go Back</a>
 					</div>
 
 					<div class="card-body">
@@ -82,6 +78,11 @@
 								<input type="text" class="form-control" id="dateInformation">
 							</div>
 						</div>
+						<div class="row message-banners comment-failed-banner" style="display: none;">
+							<span class="text-center warning-banner">
+								<i class="bi bi-exclamation-diamond-fill"></i> Unable to add comment to the date. Please check your internet connection and try again!
+							</span>
+						</div>
 						<table class="table table-striped" id="attendanceLogTable">
 							<thead>
 							<tr>
@@ -92,19 +93,29 @@
 							</tr>
 							</thead>
 							<tbody>
-							<tr>
-								<td>February 24, 2021 7:21 AM</td>
-								<td>Wednesday</td>
-								<td>Clock In</td>
-								<td><i class="bi bi-pen-fill"></i></td>
-							</tr>
-
-							<tr>
-								<td>February 24, 2021 10:10 PM</td>
-								<td>Wednesday</td>
-								<td>Clock Out</td>
-								<td><i class="bi bi-pen-fill"></i></td>
-							</tr>
+							<?php if ($getEmployeeAttendance->num_rows() > 0): 
+								foreach ($getEmployeeAttendance->result_array() as $row):
+									$logType = 'Clock Out';
+									if ($row['LogType'] == 1) {
+										$logType = 'Clock In';
+									}
+									echo '<tr>';
+										echo '<td>' . $row['Date'] . ' ' . $row['Time'];
+										echo '<td>' . $row['Day'];
+										echo '<td>' . $logType;
+										echo '<td>
+												<div class="row">
+													<div class="col-sm-1">
+														<label for="comment_' . $row['ID'] . '"<i class="bi bi-pen-fill"></i>
+													</div>
+													<div class="col-sm-11">
+														<input class="comment-input" id="comment_' . $row['ID'] . '" type="text" value="' . $row['Comment'] . '" data-id="' . $row['ID'] . '" data-defaultvalue="' . $row['Comment'] . '">
+													</div>
+												</div>
+											</td>';
+									echo '</tr>';
+								endforeach;
+							endif; ?>
 							</tbody>
 						</table>
 					</div>
@@ -125,7 +136,7 @@
 		</footer>
 	</div>
 </div>
-<?=$this->load->view('main/globals/scripts.php');?>
+<?php $this->load->view('main/globals/scripts.php'); ?>
 <script src="<?=base_url()?>/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="<?=base_url()?>/assets/js/bootstrap.bundle.min.js"></script>
 <script src="<?=base_url()?>/assets/js/main.js"></script>
@@ -134,12 +145,36 @@
 <script src="<?=base_url()?>/assets/vendors/simple-datatables/simple-datatables.js"></script>
 <script src="<?=base_url()?>/assets/js/jquery.daterangepicker.min.js"></script>
 <script>
-	// Simple Datatable
-	let attendanceLogTable = document.querySelector('#attendanceLogTable');
-	let dataTable = new simpleDatatables.DataTable(attendanceLogTable);
+// Simple Datatable
+let attendanceLogTable = document.querySelector('#attendanceLogTable');
+let dataTable = new simpleDatatables.DataTable(attendanceLogTable);
 
-	$('#dateInformation').dateRangePicker();
-
+$('#dateInformation').dateRangePicker();
+$('.sidebar-employee-attendance').addClass('active');
+$(document).ready(function() {
+	$('.comment-input').bind('input', function() {
+		let id = $(this).data('id');
+		let value = $(this).val();
+		let defaultValue = $(this).data('defaultvalue');
+		$.ajax({
+			url: "<?php echo base_url() . 'AJAX_setAttendanceComment';?>",
+			method: "POST",
+			data: {id: id, value: value},
+			dataType: "html",
+			success: function(response){
+				$('.comment-failed-banner').fadeOut();
+				console.log('Comment added to ' + id);
+			},
+			error: function(xhr, textStatus, error){
+				$('.comment-failed-banner').fadeIn();
+				$('#comment_' + id).val(defaultValue);
+				console.log(xhr.statusText);
+				console.log(textStatus);
+				console.log(error);
+			}
+		});
+	});
+});
 </script>
 
 <script src="<?=base_url()?>/assets/js/main.js"></script>
