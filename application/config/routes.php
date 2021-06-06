@@ -57,5 +57,8 @@ $route['admin'] = 'Admin';
 $route['employee'] = 'Employee';
 $route['employee/log'] = 'Employee/attendanceLog';
 
+$route['FORM_addNewEmployee'] = 'Admin/FORM_addNewEmployee';
+$route['FORM_updateEmployee'] = 'Admin/FORM_updateEmployee';
+
 $route['AJAX_setAttendance'] = 'AJAX/AJAX_setAttendance';
 $route['AJAX_setAttendanceComment'] = 'AJAX/AJAX_setAttendanceComment';

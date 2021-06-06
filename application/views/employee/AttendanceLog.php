@@ -33,11 +33,14 @@ $getEmployeeAttendance = $this->Model_Selects->GetEmployeeAttendance($userID);
 			box-shadow: none !important;
 			background-color: rgba(0, 0, 0, 0.08);
 		}
+		.dataTable-container {
+			overflow-x: hidden !important;
+		}
 	</style>
 </head>
 <body>
 <div id="app">
-	<?php $this->load->view('employee/template/sidebar') ?>
+	<?php $this->load->view('main/template/sidebar') ?>
 	<div id="main">
 		<header class="mb-3">
 			<a href="#" class="burger-btn d-block d-xl-none">
@@ -83,7 +86,7 @@ $getEmployeeAttendance = $this->Model_Selects->GetEmployeeAttendance($userID);
 								<i class="bi bi-exclamation-diamond-fill"></i> Unable to add comment to the date. Please check your internet connection and try again!
 							</span>
 						</div>
-						<table class="table table-striped" id="attendanceLogTable">
+						<table class="table" id="attendanceLogTable">
 							<thead>
 							<tr>
 								<th>Date and Time</th>
@@ -95,18 +98,20 @@ $getEmployeeAttendance = $this->Model_Selects->GetEmployeeAttendance($userID);
 							<tbody>
 							<?php if ($getEmployeeAttendance->num_rows() > 0): 
 								foreach ($getEmployeeAttendance->result_array() as $row):
-									$logType = 'Clock Out';
-									if ($row['LogType'] == 1) {
-										$logType = 'Clock In';
+									$logType = 'Clock In';
+									$rowStyle = '';
+									if ($row['LogType'] == 0) {
+										$logType = 'Clock Out';
+										$rowStyle = ' style="--bs-table-accent-bg: var(--bs-table-striped-bg);"';
 									}
-									echo '<tr>';
+									echo '<tr' . $rowStyle . '>';
 										echo '<td>' . $row['Date'] . ' ' . $row['Time'];
 										echo '<td>' . $row['Day'];
 										echo '<td>' . $logType;
 										echo '<td>
 												<div class="row">
 													<div class="col-sm-1">
-														<label for="comment_' . $row['ID'] . '"<i class="bi bi-pen-fill"></i>
+														<label for="comment_' . $row['ID'] . '"><span class="comment-pen_' . $row['ID'] . '"><i class="bi bi-pen-fill"></i></span>
 													</div>
 													<div class="col-sm-11">
 														<input class="comment-input" id="comment_' . $row['ID'] . '" type="text" value="' . $row['Comment'] . '" data-id="' . $row['ID'] . '" data-defaultvalue="' . $row['Comment'] . '">
@@ -152,10 +157,11 @@ let dataTable = new simpleDatatables.DataTable(attendanceLogTable);
 $('#dateInformation').dateRangePicker();
 $('.sidebar-employee-attendance').addClass('active');
 $(document).ready(function() {
-	$('.comment-input').bind('input', function() {
+	$('body').on('input', '.comment-input', function() {
 		let id = $(this).data('id');
 		let value = $(this).val();
 		let defaultValue = $(this).data('defaultvalue');
+		// $('.comment-pen_' + id).html('<i class="bi bi-pen-fill text-muted"></i>');
 		$.ajax({
 			url: "<?php echo base_url() . 'AJAX_setAttendanceComment';?>",
 			method: "POST",
@@ -164,6 +170,8 @@ $(document).ready(function() {
 			success: function(response){
 				$('.comment-failed-banner').fadeOut();
 				console.log('Comment added to ' + id);
+				$('#comment_' + id).data('defaultvalue', value);
+				// $('.comment-pen_' + id).html('<i class="bi bi-pen-fill"></i>');
 			},
 			error: function(xhr, textStatus, error){
 				$('.comment-failed-banner').fadeIn();
@@ -171,6 +179,7 @@ $(document).ready(function() {
 				console.log(xhr.statusText);
 				console.log(textStatus);
 				console.log(error);
+				// $('.comment-pen_' + id).html('<i class="bi bi-pen-fill"></i>');
 			}
 		});
 	});

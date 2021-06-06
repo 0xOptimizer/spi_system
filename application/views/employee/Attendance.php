@@ -48,7 +48,7 @@ if ($getLatestAttendance->num_rows() > 0) {
 </head>
 <body>
 <div id="app">
-	<?php $this->load->view('employee/template/sidebar') ?>
+	<?php $this->load->view('main/template/sidebar') ?>
 	<div id="main">
 		<header class="mb-3">
 			<a href="#" class="burger-btn d-block d-xl-none">

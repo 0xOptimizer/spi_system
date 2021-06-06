@@ -19,7 +19,7 @@ class AJAX extends CI_Controller {
 		if ($this->session->userdata('UserID')) {
 			$userID = $this->session->userdata('UserID');
 		}
-		if ($date != NULL && $time != NULL && $day != NULL) {
+		if ($date != NULL && $time != NULL && $day != NULL && $logType != NULL) {
 			$data = array(
 				'UserID' => $userID,
 				'Date' => $date,
@@ -37,7 +37,9 @@ class AJAX extends CI_Controller {
 	public function AJAX_setAttendanceComment()
 	{
 		$id = $this->input->post('id');
+		$id = filter_var($id, FILTER_SANITIZE_STRING);
 		$value = $this->input->post('value');
+		$value = filter_var($value, FILTER_SANITIZE_STRING);
 		$userID = 'N/A';
 		if ($this->session->userdata('UserID')) {
 			$userID = $this->session->userdata('UserID');
