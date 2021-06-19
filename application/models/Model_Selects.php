@@ -42,4 +42,13 @@ class Model_Selects extends CI_Model {
 		$result = $this->db->get('employees_attendance');  
 		return $result;
 	}
+	public function GetEmployeeAttendanceInDate($userID, $date)
+	{
+		$this->db->select('*');
+		$this->db->order_by('ID', 'desc');
+		$this->db->where('UserID', $userID);
+		$this->db->where('Date', $date);
+		$result = $this->db->get('employees_attendance');  
+		return $result;
+	}
 }

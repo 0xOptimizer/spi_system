@@ -15,7 +15,7 @@
 				<li class="sidebar-title">ORWELL</li>
 
 				<li class="sidebar-item sidebar-admin-attendance-list">
-					<a href="<?=base_url().'admin'?>" class='sidebar-link'>
+					<a href="<?=base_url().'admin/attendance'?>" class='sidebar-link'>
 						<i class="bi bi-calendar-check-fill"></i>
 						<span>Attendance List</span>
 					</a>

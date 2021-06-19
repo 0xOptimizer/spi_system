@@ -9,6 +9,7 @@ class Employee extends CI_Controller {
 		parent::__construct();
 		$this->load->model('Model_Selects');
 		$this->load->model('Model_Security');
+		$this->load->model('Model_Updates');
 		if($this->Model_Security->CheckPrivilegeLevel() >= 1) {
 			$this->globalData['userID'] = 'N/A';
 			if ($this->session->userdata('UserID')) {
@@ -128,6 +129,43 @@ class Employee extends CI_Controller {
 			);
 			$updateEmployee = $this->Model_Updates->UpdateEmployee($data, $userID);
 			if ($updateEmployee == TRUE) {
+				// Info Handler
+				// ~ name
+				$fullName = '';
+				$fullNameHover = '';
+				$isFullNameHoverable = false;
+				if ($lastName) {
+					$fullName = $fullName . $lastName . ', ';
+					$fullNameHover = $fullNameHover . $lastName . ', ';
+				} else {
+					$fullNameHover = $fullNameHover . '[<i>No Last Name</i>], ';
+					$isFullNameHoverable = true;
+				}
+				if ($firstName) {
+					$fullName = $fullName . $firstName . ' ';
+					$fullNameHover = $fullNameHover . $firstName . ' ';
+				} else {
+					$fullNameHover = $fullNameHover . '[<i>No First Name</i>] ';
+					$isFullNameHoverable = true;
+				}
+				if ($middleName) {
+					$fullName = $fullName . $middleName[0] . '.';
+					$fullNameHover = $fullNameHover . $middleName[0] . '.';
+				} else {
+					$fullNameHover = $fullNameHover . '[<i>No MI</i>].';
+					$isFullNameHoverable = true;
+				}
+				if ($nameExtension) {
+					$fullName = $fullName . ', ' . $nameExtension;
+					$fullNameHover = $fullNameHover . ', ' . $nameExtension;
+				}
+				if (strlen($fullName) > 90) {
+					$fullName = substr($fullName, 0, 90);
+					$fullName = $fullName . '...';
+					$isFullNameHoverable = true;
+				}
+				$data['FullName'] = $fullName;
+				$this->session->set_userdata($data);
 				if ($loginEmail != NULL && $loginPassword != NULL) {
 					$loginData = array(
 						'LoginEmail' => $loginEmail,
@@ -135,18 +173,18 @@ class Employee extends CI_Controller {
 					);
 					$updateEmployeeLogin = $this->Model_Updates->UpdateEmployeeLogin($loginData, $userID);
 					if ($updateEmployeeLogin) {
-						redirect('admin');
+						redirect(base_url() . 'profile');
 					} else {
-						redirect('admin');
+						redirect(base_url() . 'profile');
 					}
 				} else {
-					redirect('admin');
+					redirect(base_url() . 'profile');
 				}
 			}
 			else
 			{
 				$this->Model_Logbook->SetPrompts('error', 'error', 'Error uploading data. Please try again.');
-				redirect('admin');
+				redirect(base_url() . 'profile');
 			}
 		}
 	}

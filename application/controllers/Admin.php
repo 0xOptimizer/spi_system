@@ -61,6 +61,14 @@ class Admin extends CI_Controller {
 		$data['globalHeader'] = $this->load->view('main/globals/header', $header);
 		$this->load->view('admin/Subjects', $data);
 	}
+	public function attendance()
+	{
+		$data = [];
+		$data = array_merge($data, $this->globalData);
+		$header['pageTitle'] = 'Attendance List - SPI';
+		$data['globalHeader'] = $this->load->view('main/globals/header', $header);
+		$this->load->view('admin/AttendanceList', $data);
+	}
 	// Form inputs
 	public function FORM_addNewEmployee()
 	{	

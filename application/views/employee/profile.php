@@ -32,6 +32,13 @@ if ($getLoginCredentials->num_rows() > 0) {
 }
 
 ?>
+<style>
+	.image-hover:hover {
+		opacity: 0.6;
+		cursor: pointer;
+		transition: 0.1s;
+	}
+</style>
 </head>
 <body>
 <div id="app">
@@ -56,8 +63,7 @@ if ($getLoginCredentials->num_rows() > 0) {
 				<div class="card">
 					<div class="card-body">
 						<form action="<?php echo base_url() . 'FORM_selfUpdateEmployee';?>" method="POST" enctype="multipart/form-data">
-						<input id="UpdateUserID" type="hidden" name="userID">
-						<input id="UpdateDefaultImage" type="hidden" name="defaultImage">
+						<input id="UpdateDefaultImage" type="hidden" name="defaultImage" value="<?=$image?>">
 							<div class="row">
 								<!-- Left Part -->
 								<div class="col-sm-12 col-md-6">
@@ -125,18 +131,12 @@ if ($getLoginCredentials->num_rows() > 0) {
 													<input id="LoginEmail" type="text" class="form-control" name="loginEmail" value="<?=$email?>">
 												</div>
 											</div>
-											<!-- <div class="form-group col-sm-12">
-												<label class="input-label">CURRENT PASSWORD (ENCRYPTED) - <button type="button" class="btn btn-sm-primary"><i class="bi bi-brightness-high-fill"></i> set a new password</button></label>
-												<div class="input-group">
-													<div class="input-group-prepend">
-														<span class="input-group-text"><i class="bi bi-key-fill h-100 w-100" style="font-size: 16px; margin-top: 5px;"></i></span>
-													</div>
-													<input id="LoginPassword" type="password" class="form-control" name="loginPassword" readonly>
-												</div>
-											</div> -->
 										</div>
 									</div>
 								</div>
+							</div>
+							<div class="row">
+								<button type="submit" class="btn btn-success w-50"><i class="bi bi-check-square"></i> Save Changes</button>
 							</div>
 						</form>
 					</div>
@@ -166,38 +166,22 @@ if ($getLoginCredentials->num_rows() > 0) {
 <script src="<?=base_url()?>/assets/vendors/simple-datatables/simple-datatables.js"></script>
 <script src="<?=base_url()?>/assets/js/jquery.daterangepicker.min.js"></script>
 <script>
-// Simple Datatable
-let attendanceLogTable = document.querySelector('#attendanceLogTable');
-let dataTable = new simpleDatatables.DataTable(attendanceLogTable);
-
-$('#dateInformation').dateRangePicker();
 $('.sidebar-profile').addClass('active');
 $(document).ready(function() {
-	$('body').on('input', '.comment-input', function() {
-		let id = $(this).data('id');
-		let value = $(this).val();
-		let defaultValue = $(this).data('defaultvalue');
-		// $('.comment-pen_' + id).html('<i class="bi bi-pen-fill text-muted"></i>');
-		$.ajax({
-			url: "<?php echo base_url() . 'AJAX_setAttendanceComment';?>",
-			method: "POST",
-			data: {id: id, value: value},
-			dataType: "html",
-			success: function(response){
-				$('.comment-failed-banner').fadeOut();
-				console.log('Comment added to ' + id);
-				$('#comment_' + id).data('defaultvalue', value);
-				// $('.comment-pen_' + id).html('<i class="bi bi-pen-fill"></i>');
-			},
-			error: function(xhr, textStatus, error){
-				$('.comment-failed-banner').fadeIn();
-				$('#comment_' + id).val(defaultValue);
-				console.log(xhr.statusText);
-				console.log(textStatus);
-				console.log(error);
-				// $('.comment-pen_' + id).html('<i class="bi bi-pen-fill"></i>');
+	$('#UpdatePFPInputPreview').click(function(){ $('#UpdatePFPInput').trigger('click'); });
+	function readURL(input, previewID) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$(previewID).attr('src', e.target.result);
+				// localStorage.setItem('profileImage', e.target.result);
 			}
-		});
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+	$("#UpdatePFPInput").change(function() {
+		readURL(this, '#UpdatePFPInputPreview');
+		$('#UpdatepImageChecker').val('1');
 	});
 });
 </script>
