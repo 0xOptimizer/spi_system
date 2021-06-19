@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+$globalHeader;
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Login - CHRISTOPHER JOHN GAMO SYSTEM</title>
-	<!-- <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"> -->
-	<link rel="stylesheet" href="<?=base_url()?>/assets/css/bootstrap.css">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/vendors/bootstrap-icons/bootstrap-icons.css">
-	<link rel="stylesheet" href="<?=base_url()?>/assets/css/app.css">
+?>
 	<link rel="stylesheet" href="<?=base_url()?>/assets/css/pages/auth.css">
 </head>
 
@@ -21,15 +14,15 @@
 
 				<h1 class="auth-title">Log in.</h1>
 
-				<form action="index.html">
+				<form action="<?php echo base_url() . 'FORM_loginValidation';?>" method="POST" enctype="multipart/form-data">
 					<div class="form-group position-relative has-icon-left mb-4">
-						<input type="text" class="form-control form-control-xl" placeholder="Username">
+						<input type="text" class="form-control form-control-xl" name="email" placeholder="Email">
 						<div class="form-control-icon">
-							<i class="bi bi-person"></i>
+							<i class="bi bi-envelope"></i>
 						</div>
 					</div>
 					<div class="form-group position-relative has-icon-left mb-4">
-						<input type="password" class="form-control form-control-xl" placeholder="Password">
+						<input type="password" class="form-control form-control-xl" name="password" placeholder="Password">
 						<div class="form-control-icon">
 							<i class="bi bi-shield-lock"></i>
 						</div>
@@ -40,10 +33,11 @@
 							Keep me logged in
 						</label>
 					</div>
-					<button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
+					<?=$this->session->flashdata('prompt');?>
+					<button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
 				</form>
 				<div class="text-center mt-5 text-lg fs-4">
-					<p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
+					<p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a></p>
 				</div>
 			</div>
 		</div>

@@ -1,6 +1,6 @@
 <div class="modal fade" id="NewEmployeeModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog" role="document">
-		<form action="<?php echo base_url() . 'FORM_addNewEmployee';?>" method="POST" class="feedback-recaptcha-container" enctype="multipart/form-data">
+		<form action="<?php echo base_url() . 'FORM_addNewEmployee';?>" method="POST" enctype="multipart/form-data">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" style="margin: 0 auto;"><i class="bi bi-person-badge-fill" style="font-size: 24px;"></i> New Employee</h4>
@@ -62,7 +62,7 @@
 			</div>
 			<div class="feedback-form modal-footer">
 				<button type="button" class="btn btn-primary employee-add-new-comment-btn"><i class="bi bi-pen-fill"></i> Comment</button>
-				<button type="submit" class="btn btn-success"><i class="bi bi-check"></i> Save</button>
+				<button type="submit" class="btn btn-success"><i class="bi bi-check-square"></i> Save</button>
 			</div>
 		</div>
 		</form>

@@ -18,6 +18,13 @@ class Model_Selects extends CI_Model {
 		$result = $this->db->get('employees');  
 		return $result;
 	}
+	public function GetSubjects()
+	{
+		$this->db->select('*');
+		$this->db->order_by('ID', 'desc');
+		$result = $this->db->get('subjects_list');  
+		return $result;
+	}
 	public function GetLatestAttendance($userID)
 	{
 		$this->db->select('*');

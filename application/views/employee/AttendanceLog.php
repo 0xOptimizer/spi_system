@@ -1,10 +1,6 @@
 <?php
 $globalHeader;
 
-$userID = 'N/A';
-if ($this->session->userdata('UserID')) {
-	$userID = $this->session->userdata('UserID');
-}
 $getEmployeeAttendance = $this->Model_Selects->GetEmployeeAttendance($userID);
 
 ?>
@@ -12,9 +8,6 @@ $getEmployeeAttendance = $this->Model_Selects->GetEmployeeAttendance($userID);
 	<link rel="stylesheet" href="<?=base_url()?>/assets/vendors/simple-datatables/style.css">
 	<link rel="stylesheet" href="<?=base_url()?>/assets/css/daterangepicker.min.css">
 	<style>
-		.spi-logo{
-			margin: auto;
-		}
 		input {
 			color: inherit;
 			background-color: transparent;

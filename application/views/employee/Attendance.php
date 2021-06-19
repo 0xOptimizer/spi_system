@@ -2,10 +2,6 @@
 
 $globalHeader;
 
-$userID = 'N/A';
-if ($this->session->userdata('UserID')) {
-	$userID = $this->session->userdata('UserID');
-}
 $clockType = 1;
 $lastClockMessage = 'You have no attendance records yet!';
 $getLatestAttendance = $this->Model_Selects->GetLatestAttendance($userID);
@@ -32,10 +28,6 @@ if ($getLatestAttendance->num_rows() > 0) {
 
 ?>
 <style>
-	.spi-logo{
-		margin: auto;
-	}
-
 	#clock{
 		font-size: 3.2rem;
 		font-weight: bolder;
@@ -77,7 +69,7 @@ if ($getLatestAttendance->num_rows() > 0) {
 				<div class="card">
 					<div class="card-header">
 						<div class="row" style="text-align: center">
-							<h4 class="card-title" id="salutation">Good Morning, <?=$userName?>!</h4>
+							<h4 class="card-title" id="salutation">Good Morning, <?=$firstName?>!</h4>
 						</div>
 					</div>
 					<div class="card-body">

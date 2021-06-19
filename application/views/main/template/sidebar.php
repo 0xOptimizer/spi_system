@@ -26,8 +26,8 @@
 						<span>Employees</span>
 					</a>
 				</li>
-				<li class="sidebar-item sidebar-admin-assignments">
-					<a href="<?=base_url().'employee/requirements'?>" class='sidebar-link'>
+				<li class="sidebar-item sidebar-admin-subjects">
+					<a href="<?=base_url().'admin/subjects'?>" class='sidebar-link'>
 						<i class="bi bi-diamond-half"></i>
 						<span>Subjects List</span>
 					</a>
@@ -50,6 +50,12 @@
 
 				<li class="sidebar-title">ACCOUNT</li>
 
+				<li class="sidebar-item sidebar-profile">
+					<a href="<?=base_url().'profile'?>" class='sidebar-link'>
+						<img class="rounded-circle" src="<?=base_url() . $image;?>" width="24" height="24">
+						<span><?=$fullName;?></span>
+					</a>
+				</li>
 				<li class="sidebar-item">
 					<a href="<?=base_url().'logout'?>" class='sidebar-link'>
 						<i class="bi bi-door-open-fill"></i>

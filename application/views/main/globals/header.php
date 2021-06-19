@@ -15,3 +15,12 @@
 	<link rel="stylesheet" href="<?=base_url()?>/assets/css/app.css">
 	<link rel="shortcut icon" href="<?=base_url()?>/assets/images/favicon.svg" type="image/x-icon">
 	<link href="<?=base_url();?>assets/css/style.css" rel="stylesheet">
+
+<?php
+
+$userID = 'N/A';
+if ($this->session->userdata('UserID')) {
+	$userID = $this->session->userdata('UserID');
+}
+
+?>

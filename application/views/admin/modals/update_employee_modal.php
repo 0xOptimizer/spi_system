@@ -1,6 +1,6 @@
 <div class="modal fade" id="UpdateEmployeeModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-xl" role="document">
-		<form action="<?php echo base_url() . 'FORM_updateEmployee';?>" method="POST" class="feedback-recaptcha-container" enctype="multipart/form-data">
+		<form action="<?php echo base_url() . 'FORM_updateEmployee';?>" method="POST" enctype="multipart/form-data">
 		<input id="UpdateUserID" type="hidden" name="userID">
 		<input id="UpdateDefaultImage" type="hidden" name="defaultImage">
 		<div class="modal-content">
@@ -108,7 +108,7 @@
 							</div>
 							<div class="col-sm-12">
 								<label class="input-label">LOGIN CREDENTIALS</label>
-								<div class="clock-failed-banner my-2">
+								<div class="login-failed-banner my-2">
 									<span class="text-center info-banner">
 										<i class="bi bi-exclamation-diamond-fill"></i> No log in credentials set. This employee cannot log in.
 									</span>
@@ -119,16 +119,16 @@
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="bi bi-envelope-fill h-100 w-100" style="font-size: 16px; margin-top: 5px;"></i></span>
 										</div>
-										<input type="text" class="form-control" name="loginEmail" readonly>
+										<input id="LoginEmail" type="text" class="form-control" name="loginEmail" readonly>
 									</div>
 								</div>
 								<div class="form-group col-sm-12">
-									<label class="input-label">PASSWORD<!--  - <button type="button" class="btn btn-sm-primary"><i class="bi bi-brightness-high-fill"></i> show</button> --></label>
+									<label class="input-label">CURRENT PASSWORD (ENCRYPTED) - <button type="button" class="btn btn-sm-primary"><i class="bi bi-brightness-high-fill"></i> set a new password</button></label>
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="bi bi-key-fill h-100 w-100" style="font-size: 16px; margin-top: 5px;"></i></span>
 										</div>
-										<input type="password" class="form-control" name="loginPassword" readonly>
+										<input id="LoginPassword" type="password" class="form-control" name="loginPassword" readonly>
 									</div>
 								</div>
 							</div>

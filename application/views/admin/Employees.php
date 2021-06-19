@@ -2,10 +2,6 @@
 
 $globalHeader;
 
-$userID = 'N/A';
-if ($this->session->userdata('UserID')) {
-	$userID = $this->session->userdata('UserID');
-}
 $clockType = 1;
 $lastClockMessage = 'You have no attendance records yet!';
 $getLatestAttendance = $this->Model_Selects->GetLatestAttendance($userID);
@@ -61,9 +57,6 @@ if ($getLatestAttendance->num_rows() > 0) {
 		cursor: pointer;
 		transition: 0.1s;
 	}
-	.input-label {
-		font-size: 12px;
-	}
 </style>
 </head>
 <body>
@@ -86,8 +79,7 @@ if ($getLatestAttendance->num_rows() > 0) {
 					<div class="col-12 col-md-6 order-md-2 order-first">
 						<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-								<li class="breadcrumb-item active" aria-current="page">Attendance</li>
+								<li class="breadcrumb-item active"><a href="<?=base_url();?>admin">Admin</a></li>
 							</ol>
 						</nav>
 					</div>
@@ -159,6 +151,8 @@ if ($getLatestAttendance->num_rows() > 0) {
 											$hasContactNumber = false;
 											$hasAddress = false;
 											$hasLoginCredentials = false;
+											$loginEmail = '';
+											$loginPassword = '';
 											if ($row['DateOfBirth']) {
 												$hasDateOfBirth = true;
 											}
@@ -168,12 +162,19 @@ if ($getLatestAttendance->num_rows() > 0) {
 											if ($row['Address']) {
 												$hasAddress = true;
 											}
-											if ($row['LoginEmail'] && $row['LoginPassword']) {
-												$hasLoginCredentials = true;
+											$getLoginInfo = $this->Model_Selects->GetUserID($row['UserID'], 'employees_login');
+											if ($getLoginInfo->num_rows() > 0) {
+												foreach($getLoginInfo->result_array() as $loginRow) {
+													$loginEmail = $loginRow['LoginEmail'];
+													$loginPassword = $loginRow['LoginPassword'];
+													if ($loginRow['LoginEmail'] && $loginRow['LoginPassword']) {
+														$hasLoginCredentials = true;
+													}
+												}
 											}
 											?>
 											<div class="col-xs-12 col-sm-6 col-md-3">
-												<div class="card employee-standard-card employee-card-hover" data-userid="<?=$row['UserID'];?>" data-image="<?=$row['Image'];?>" data-firstname="<?=$row['FirstName'];?>" data-middlename="<?=$row['MiddleName'];?>" data-lastname="<?=$row['LastName'];?>" data-nameextension="<?=$row['NameExtension'];?>" data-dateofbirth="<?=$row['DateOfBirth'];?>" data-contactnumber="<?=$row['ContactNumber'];?>" data-address="<?=$row['Address'];?>" data-comment="<?=$row['Comment'];?>">
+												<div class="card employee-standard-card employee-card-hover" data-userid="<?=$row['UserID'];?>" data-image="<?=$row['Image'];?>" data-firstname="<?=$row['FirstName'];?>" data-middlename="<?=$row['MiddleName'];?>" data-lastname="<?=$row['LastName'];?>" data-nameextension="<?=$row['NameExtension'];?>" data-dateofbirth="<?=$row['DateOfBirth'];?>" data-contactnumber="<?=$row['ContactNumber'];?>" data-address="<?=$row['Address'];?>" data-comment="<?=$row['Comment'];?>" data-loginemail="<?=$loginEmail;?>" data-loginpassword="<?=$loginPassword;?>">
 													<div class="card-body text-center">
 														<p><img class="img-fluid rounded-circle" src="<?=base_url().$row['Image'];?>" width="128" height="128" alt="card image"></p>
 														<h4 class="card-title"<?php if($isFullNameHoverable): ?> data-toggle="tooltip" data-placement="top" data-html="true" title="<?=$fullNameHover;?>"<?php endif; ?>><?=$fullName?></h4>
@@ -227,98 +228,8 @@ if ($getLatestAttendance->num_rows() > 0) {
 <script src="<?=base_url()?>/assets/js/jquery.js"></script>
 <script src="<?=base_url()?>/assets/js/moment.min.js"></script>
 <script type="text/javascript">
-<?php if ($clockType == 1): ?>
-	var isClockIn = true;
-<?php else: ?>
-	var isClockIn = false;
-<?php endif; ?>
-function clock() {
-	let $date = new Date;
-	$("#clock").text(moment($date).format('LTS'));
-	$("#dateToday").text(moment($date).format('dddd - MMM D, YYYY'));
-	let clockDate = moment($date).format('MMM D, YYYY');
-	let clockTime = moment($date).format('LTS');
-	let clockDay = moment($date).format('dddd');
-	$('.clock-btn').data('date', clockDate);
-	$('.clock-btn').data('time', clockTime);
-	$('.clock-btn').data('day', clockDay);
-	// if (isClockIn) {
-	// 	isClockIn = false;
-	// } else {
-	// 	isClockIn = true;
-	// }
-	// refreshClockButton(isClockIn);
-}
-function refreshClockButton(isClockIn) {
-	if (isClockIn) {
-		$('.clock-btn').removeClass('btn-primary');
-		$('.clock-btn').addClass('btn-success');
-		$('.clock-btn').data('type', '1');
-		$('.clock-btn').html('CLOCK IN');
-	} else {
-		$('.clock-btn').removeClass('btn-success');
-		$('.clock-btn').addClass('btn-primary');
-		$('.clock-btn').data('type', '0');
-		$('.clock-btn').html('CLOCK OUT');
-	}
-}
-setInterval(clock, 1000);
 $('.sidebar-admin-employees').addClass('active');
 $(document).ready(function() {
-	clock();
-	refreshClockButton(isClockIn);
-
-	$('.clock-btn').on('click', function() {
-		$('.clock-banners').fadeOut();
-		$(this).attr('disabled', true);
-		$(this).addClass('disabled-hover');
-		let date = $(this).data('date');
-		let time = $(this).data('time');
-		let day = $(this).data('day');
-		let logType = $(this).data('type');
-		$(this).html('<i class="spinner-border spinner-border-sm text-muted"></i>');
-		$.ajax({
-			url: "<?php echo base_url() . 'AJAX_setAttendance';?>",
-			method: "POST",
-			data: {date: date, time: time, day: day, logType: logType},
-			dataType: "html",
-			success: function(response){
-				console.log(response);
-				$('.clock-banners').fadeOut();
-				let logTypeAfter;
-				let logTypeText = '';
-				if (logType == 1) {
-					logTypeText = 'In';
-					logTypeAfter = false;
-				} else {
-					logTypeText = 'Out';
-					logTypeAfter = true;
-				}
-				refreshClockButton(logTypeAfter);
-				$('.clock-btn').attr('disabled', false);
-				$('.clock-btn').removeClass('disabled-hover');
-				let clockMessage = 'Last Clock ' + logTypeText + ' at ' + time + ' on ' + day + ', ' + date;
-				$('.last-clock-message').html(clockMessage);
-			},
-			error: function(xhr, textStatus, error){
-				$('.clock-banners').fadeOut();
-				$('.clock-failed-banner').fadeIn();
-				console.log(xhr.statusText);
-				console.log(textStatus);
-				console.log(error);
-				let logTypeValue;
-				if (logType == 1) {
-					logTypeValue = true; 
-				} else {
-					logTypeValue = false;
-				}
-				console.log(logTypeValue);
-				refreshClockButton(logTypeValue);
-				$('.clock-btn').attr('disabled', false);
-				$('.clock-btn').removeClass('disabled-hover');
-			}
-		});
-	});
 	$('.employee-add-new').on('click', function() {
 		$('#NewEmployeeModal').modal('toggle');
 	});
@@ -334,6 +245,15 @@ $(document).ready(function() {
 		$('#UpdateContactNumber').val($(this).data('contactnumber'));
 		$('#UpdateAddress').val($(this).data('address'));
 		$('#UpdateComment').val($(this).data('comment'));
+		let loginEmail = $(this).data('loginemail');
+		let loginPassword = $(this).data('loginpassword');
+		$('#LoginEmail').val(loginEmail);
+		$('#LoginPassword').val(loginPassword);
+		if (loginEmail == '' || loginPassword == '') {
+			$('.login-failed-banner').show();
+		} else {
+			$('.login-failed-banner').hide();
+		}
 		$('#UpdateEmployeeModal').modal('toggle');
 	});
 	$('#PFPInputPreview').click(function(){ $('#PFPInput').trigger('click'); });

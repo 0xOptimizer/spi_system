@@ -22,4 +22,12 @@ class Model_Security extends CI_Model {
 			return 0;
 		}
 	}
+	public function GetLoginEmail($email)
+	{
+		$this->db->select('*');
+		$this->db->order_by('ID', 'desc');
+		$this->db->where('LoginEmail', $email);
+		$result = $this->db->get('employees_login');  
+		return $result;
+	}
 }

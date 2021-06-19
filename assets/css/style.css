@@ -1,3 +1,6 @@
+.spi-logo{
+	margin: auto;
+}
 .bi {
 	vertical-align: -.125em;
 	width: 1em;
@@ -50,4 +53,7 @@
 }
 .cursor-pointer:hover {
 	cursor: pointer;
+}
+.input-label {
+	font-size: 12px;
 }

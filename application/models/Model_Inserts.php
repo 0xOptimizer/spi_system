@@ -23,4 +23,14 @@ class Model_Inserts extends CI_Model {
 		$result = $this->db->update('employees_attendance', $data);
 		return $result;
 	}
+	public function InsertNewSubject($data)
+	{
+		$result = $this->db->insert('subjects_list', $data);
+		return $result;
+	}
+	public function InsertLoginHistory($data)
+	{
+		$result = $this->db->insert('employees_login_history', $data);
+		return $result;
+	}
 }
