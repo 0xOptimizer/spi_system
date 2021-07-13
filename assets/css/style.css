@@ -17,6 +17,14 @@
 	padding: 0.66rem;
 	background-color: rgba(125, 0, 0, 0.08);
 }
+.warning-banner-sm {
+	font-size: 13px;
+	color: #dc3545;
+	margin: 0.08rem;
+	border-radius: 8px;
+	padding: 0.15rem;
+	background-color: rgba(155, 0, 0, 0.08);
+}
 .info-banner {
 	color: #de940c;
 	margin: 0.25rem;
@@ -31,6 +39,21 @@
 	border-radius: 8px;
 	padding: 0.15rem;
 	background-color: rgba(155, 155, 0, 0.08);
+}
+.success-banner {
+	color: #198754;
+	margin: 0.25rem;
+	border-radius: 8px;
+	padding: 0.66rem;
+	background-color: rgba(25, 85, 25, 0.08);
+}
+.success-banner-sm {
+	font-size: 13px;
+	color: #198754;
+	margin: 0.08rem;
+	border-radius: 8px;
+	padding: 0.15rem;
+	background-color: rgba(55, 155, 55, 0.08);
 }
 .disabled-hover {
 	cursor: disabled;
@@ -56,4 +79,20 @@
 }
 .input-label {
 	font-size: 12px;
+}
+.choose-employee {
+	font-size: 18px;
+	margin-top: 0.35em;
+	padding: 0.5em;
+	border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+}
+.choose-employee span {
+	margin-left: 0.75em;
+}
+.choose-employee:hover {
+	cursor: pointer;
+	padding-left: 0.65em;
+	border-radius: 12px;
+	background-color: rgba(0, 0, 0, 0.08);
+	transition: 0.05s;
 }

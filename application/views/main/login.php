@@ -13,7 +13,7 @@ $globalHeader;
 			<div id="auth-left">
 
 				<h1 class="auth-title">Log in.</h1>
-
+				<?=$this->session->flashdata('prompt');?>
 				<form action="<?php echo base_url() . 'FORM_loginValidation';?>" method="POST" enctype="multipart/form-data">
 					<div class="form-group position-relative has-icon-left mb-4">
 						<input type="text" class="form-control form-control-xl" name="email" placeholder="Email">
@@ -33,7 +33,6 @@ $globalHeader;
 							Keep me logged in
 						</label>
 					</div>
-					<?=$this->session->flashdata('prompt');?>
 					<button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
 				</form>
 				<div class="text-center mt-5 text-lg fs-4">

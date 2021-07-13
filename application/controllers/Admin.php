@@ -181,7 +181,7 @@ class Admin extends CI_Controller {
 		$userID = $this->input->post('userID');
 
 		$loginEmail = $this->input->post('loginEmail');
-		$loginPassword = $this->input->post('loginPassword');
+		$loginPassword = $this->input->post('newLoginPassword');
 		
 		$config['upload_path'] = './uploads/'.$userID;
 		$config['allowed_types'] = 'gif|jpg|png';
@@ -276,6 +276,7 @@ class Admin extends CI_Controller {
 		$schedule = $this->input->post('schedule');
 		$course = $this->input->post('course');
 		$section = $this->input->post('section');
+		$color = $this->input->post('subjectColor');
 		// INSERT EMPLOYEE
 		$data = array(
 			'SubjectCode' => $subjectCode,
@@ -283,6 +284,7 @@ class Admin extends CI_Controller {
 			'Schedule' => $schedule,
 			'Course' => $course,
 			'Section' => $section,
+			'Color' => $color,
 			'DateAdded' => date('Y-m-d h:i:s A'),
 		);
 		$insertNewSubject = $this->Model_Inserts->InsertNewSubject($data);

@@ -122,13 +122,31 @@
 										<input id="LoginEmail" type="text" class="form-control" name="loginEmail" readonly>
 									</div>
 								</div>
-								<div class="form-group col-sm-12">
-									<label class="input-label">CURRENT PASSWORD (ENCRYPTED) - <button type="button" class="btn btn-sm-primary"><i class="bi bi-brightness-high-fill"></i> set a new password</button></label>
+								<div class="form-group col-sm-12 currentpass-group">
+									<label class="input-label">CURRENT PASSWORD (ENCRYPTED)<span class="newpass-btn-group" style="display: none;"> - <button type="button" class="newpass-btn btn btn-sm-primary"><i class="bi bi-brightness-high-fill"></i> set a new password</button></span></label>
 									<div class="input-group">
 										<div class="input-group-prepend">
 											<span class="input-group-text"><i class="bi bi-key-fill h-100 w-100" style="font-size: 16px; margin-top: 5px;"></i></span>
 										</div>
-										<input id="LoginPassword" type="password" class="form-control" name="loginPassword" readonly>
+										<input id="LoginPassword" type="password" class="form-control" readonly>
+									</div>
+								</div>
+								<div class="form-group col-sm-12 newpass-group" style="display: none;">
+									<label class="input-label">NEW PASSWORD</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i class="bi bi-key-fill h-100 w-100" style="font-size: 16px; margin-top: 5px;"></i></span>
+										</div>
+										<input id="NewLoginPassword" type="password" class="form-control" name="newLoginPassword" readonly>
+									</div>
+								</div>
+								<div class="form-group col-sm-12 newpass-group" style="display: none;">
+									<label class="input-label">REPEAT NEW PASSWORD</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i class="bi bi-key-fill h-100 w-100" style="font-size: 16px; margin-top: 5px;"></i></span>
+										</div>
+										<input id="RepeatNewLoginPassword" type="password" class="form-control" readonly>
 									</div>
 								</div>
 							</div>
@@ -137,7 +155,10 @@
 				</div>
 			</div>
 			<div class="feedback-form modal-footer">
-				<button type="submit" class="btn btn-success"><i class="bi bi-check-square"></i> Save Changes</button>
+				<span class="error-saving-banner text-center warning-banner-sm" style="display: none;">
+					<i class="bi bi-exclamation-diamond-fill"></i> Repeat password does not match
+				</span>
+				<button type="submit" class="save-btn btn btn-success"><i class="bi bi-check-square"></i> Save Changes</button>
 			</div>
 		</div>
 		</form>

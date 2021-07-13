@@ -7,9 +7,20 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="form-group col-sm-12">
+					<div class="form-group col-sm-8">
 						<label class="input-label">SUBJECT CODE</label>
-						<input type="text" class="form-control w-50" name="subjectCode">
+						<input type="text" class="form-control w-75" name="subjectCode">
+					</div>
+					<div class="form-group col-sm-4">
+						<label class="input-label">COLOR</label>
+						<select class="form-control" name="subjectColor">
+							<option value="red">Red</option>
+							<option value="blue">Blue</option>
+							<option value="green">Green</option>
+							<option value="yellow">Yellow</option>
+							<option value="purple">Purple</option>
+							<option value="cyan">Cyan</option>
+						</select>
 					</div>
 					<div class="form-group col-sm-12">
 						<label class="input-label">SUBJECT DESCRIPTION</label>

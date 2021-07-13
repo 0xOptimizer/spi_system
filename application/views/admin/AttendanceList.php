@@ -1,6 +1,18 @@
 <?php
 $globalHeader;
 
+date_default_timezone_set('Asia/Manila');
+$date = date('M j, Y');
+
+if ($this->input->get('date')) {
+	$date = $this->input->get('date');
+	$date = date('M j, Y', strtotime($date));
+}
+$isCurrentDate = false;
+if ($date == date('M j, Y')) {
+	$isCurrentDate = true;
+}
+
 ?>
 <style>
 	.rotate-text {
@@ -38,22 +50,38 @@ $globalHeader;
 			<section class="section">
 				<div class="card">
 					<div class="card-body">
-						<div class="row message-banners comment-failed-banner" style="display: none;">
-							<span class="text-center warning-banner">
-								<i class="bi bi-exclamation-diamond-fill"></i> Unable to add comment to the date. Please check your internet connection and try again!
-							</span>
+						<div class="row">
+							<div class="col-sm-12">
+								<h5>Viewing list for <span style="text-decoration: underline;"><?=$date;?></span>
+								<?php if ($isCurrentDate): ?>
+								<span class="text-center success-banner-sm">
+									<i class="bi bi-check-circle-fill"></i> LATEST
+								</span>
+								<?php else: ?>
+								<span class="text-center info-banner-sm">
+									<i class="bi bi-exclamation-diamond-fill"></i> NOT TODAY
+								</span>
+								<?php endif; ?>
+								</h5>
+							</div>
 						</div>
 						<div class="table-responsive">
-							<table class="table" id="attendanceLogTable">
+							<table class="table" id="attendanceLogTable" style="overflow: hidden;">
 								<thead>
 								<tr>
 									<th></th>
-									<?php for($i = 1; $i <= 24; $i++):
-										$hours = $i;
+									<?php for($i = 0; $i <= 23; $i++):
+										if ($i == 0) {
+											$hours = 12;
+										} else {
+											$hours = $i;
+										}
 										$hoursIndicator = 'AM';
-										if ($hours > 12) {
+										if ($hours > 11 && $i != 0) {
 											$hoursIndicator = 'PM';
-											$hours = $hours - 12;
+											if ($hours != 12) {
+												$hours = $hours - 12;
+											}
 										}
 										if ($hours < 10) {
 											$hours = '0' . $hours;
@@ -61,7 +89,7 @@ $globalHeader;
 										$hours = $hours . ':00';
 										?>
 										<th class="rotate-text">
-											<?=$hours?> <?=$hoursIndicator?>
+											<?=$hours?> <span style="font-size: 11px;"><?=$hoursIndicator?></span>
 										</th>
 									<?php endfor; ?>
 								</tr>
@@ -105,21 +133,91 @@ $globalHeader;
 											<i><?=$fullName?></i>
 										</td>
 										<?php
-										$date = date('M j, Y');
 										$getEmployeeAttendance = $this->Model_Selects->GetEmployeeAttendanceInDate($row['UserID'], $date);
 										// echo $this->db->last_query();
-										$timeArray = [];
-										var_dump(strtotime('01:00'));
-										if ($getEmployeeAttendance->num_rows() > 0) {
+										$attendanceCount = $getEmployeeAttendance->num_rows();
+										$hoursArray = [];
+										$minutesArray = [];
+										$typeArray = [];
+										$clockInArray = [];
+										$clockOutArray = [];
+										// var_dump(strtotime('01:00'));
+										if ($attendanceCount > 0) {
 											foreach($getEmployeeAttendance->result_array() as $erow) {
-												array_push($timeArray, strtotime($erow['Time']));
+												// $dateRaw = $erow['Date'];
+												$timeRaw = new DateTime($erow['Time']);
+												$hours = $timeRaw->format('H');
+												$minutes = $timeRaw->format('i');
+												$type = $erow['LogType'];
+												if ($type == 1) {
+													array_push($clockInArray, $erow['Time']);
+												} else {
+													array_push($clockOutArray, $erow['Time']);
+												}
+												array_push($hoursArray, $hours);
+												array_push($minutesArray, $minutes);
+												array_push($typeArray, $type);
+											}
+											// Getting last clock in
+											$lastClockIn = $clockInArray[0];
+											$lastClockIn = new DateTime($lastClockIn);
+											$lastClockInHour = $lastClockIn->format('H');
+											// Getting last clock out
+											$lastClockOut = $clockOutArray[0];
+											$lastClockOut = new DateTime($lastClockOut);
+											$lastClockOutHour = $lastClockOut->format('H');
+											// Getting range
+											$range = $lastClockOut->diff($lastClockIn);
+											$rangeCount = $range->format('%H');
+											$timeTable = [];
+											for ($i = 0; $i < $rangeCount; $i++) {
+												$time = $lastClockInHour;
+												$time += $i;
+												array_push($timeTable, $time);
 											}
 										}
+										// var_dump($hoursArray);
 										// var_dump($timeArray);
-										for($k = 0; $k <= 24; $k++): ?>
+										for($i = 0; $i < 24; $i++): ?>
 										<td>
-											<?php ?>
-											<i class="bi bi-diamond"></i>
+											<?php
+											$isEmpty = false;
+											$isFilled = false;
+											$isStartHalfFilled = false;
+											$isEndHalfFilled = false;
+											if ($attendanceCount > 0) {
+												if (in_array($i, $timeTable) && $lastClockIn < $lastClockOut) {
+													$isFilled = true;
+												} else {
+													$isEmpty = true;
+												}
+												for($k = 0; $k < $attendanceCount; $k++) {
+													if ($hoursArray[$k] == $i) {
+														if ($minutesArray[$k] < 50) {
+															if ($typeArray[$k] == '1') {
+																$isStartHalfFilled = true;								
+															} else {
+																$isEndHalfFilled = true;
+															}
+														} else {
+															$isFilled = true;
+														}
+													}
+												}
+											} else {
+												$isEmpty = true;
+											}
+											// Check what to fill in the cell
+											if ($isStartHalfFilled) {
+												echo '<i class="bi bi-exclamation-diamond-fill"></i>';
+											} elseif ($isEndHalfFilled) {
+												echo '<i class="bi bi-diamond-half"></i>';
+											} elseif ($isFilled) {
+												echo '<i class="bi bi-diamond-fill"></i>';
+											} else {
+												echo '<i class="bi bi-diamond"></i>';
+											}
+											?>
 										</td>
 										<?php endfor; ?>
 									</tr>
@@ -152,7 +250,7 @@ $globalHeader;
 <script src="<?=base_url()?>/assets/js/main.js"></script>
 <script src="<?=base_url()?>/assets/js/jquery.js"></script>
 <script>
-$('.sidebar-admin-attendance').addClass('active');
+$('.sidebar-admin-attendance-list').addClass('active');
 $(document).ready(function() {
 
 });

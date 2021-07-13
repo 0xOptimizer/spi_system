@@ -74,7 +74,7 @@ $getSubjects = $this->Model_Selects->GetSubjects();
 								foreach ($getSubjects->result_array() as $row):
 									echo '<tr>';
 										echo '<td>' . $row['SubjectCode'] . ' - ' . $row['Description'];
-										echo '<td> <button type="button" class="btn btn-primary"><i class="bi bi-plus"></i></button>' . '</td>';
+										echo '<td> <button type="button" class="choose-btn btn btn-primary"><i class="bi bi-plus"></i></button>' . '</td>';
 										echo '<td>' . $row['Schedule'] . '</td>';
 										echo '<td>' . $row['Course'] . ' (Section: ' . $row['Section'] . ')';
 									echo '</tr>';
@@ -102,6 +102,8 @@ $getSubjects = $this->Model_Selects->GetSubjects();
 </div>
 <!-- Create a new subject modal -->
 <?php $this->load->view('admin/modals/create_subjects_modal.php'); ?>
+<!-- Chosoe employee modal -->
+<?php $this->load->view('admin/modals/choose_employee_modal.php'); ?>
 <?php $this->load->view('main/globals/scripts.php'); ?>
 <script src="<?=base_url()?>/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="<?=base_url()?>/assets/js/bootstrap.bundle.min.js"></script>
@@ -145,6 +147,9 @@ $(document).ready(function() {
 	});
 	$('.create-new-subject-btn').on('click', function() {
 		$('#NewSubjectModal').modal('show');
+	});
+	$('.choose-btn').on('click', function() {
+		$('#ChooseEmployeeModal').modal('show');
 	});
 });
 </script>

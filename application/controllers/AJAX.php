@@ -52,4 +52,59 @@ class AJAX extends CI_Controller {
 			};
 		}
 	}
+	public function AJAX_fetchEmployeesForSubject()
+	{
+		$getAllEmployees = $this->Model_Selects->GetAllEmployeesForSubject();
+		if ($getAllEmployees->num_rows() > 0) {
+			foreach($getAllEmployees->result_array() as $row) {
+				$userID = $row['UserID'];
+				$lastName = $row['LastName'];
+				$firstName = $row['FirstName'];
+				$middleName = $row['MiddleName'];
+				$nameExtension = $row['NameExtension'];
+				$image = $row['Image'];
+				// Info Handler
+				// ~ name
+				$fullName = '';
+				$fullNameHover = '';
+				$isFullNameHoverable = false;
+				if ($lastName) {
+					$fullName = $fullName . $lastName . ', ';
+					$fullNameHover = $fullNameHover . $lastName . ', ';
+				} else {
+					$fullNameHover = $fullNameHover . '[<i>No Last Name</i>], ';
+					$isFullNameHoverable = true;
+				}
+				if ($firstName) {
+					$fullName = $fullName . $firstName . ' ';
+					$fullNameHover = $fullNameHover . $firstName . ' ';
+				} else {
+					$fullNameHover = $fullNameHover . '[<i>No First Name</i>] ';
+					$isFullNameHoverable = true;
+				}
+				if ($middleName) {
+					$fullName = $fullName . $middleName[0] . '.';
+					$fullNameHover = $fullNameHover . $middleName[0] . '.';
+				} else {
+					$fullNameHover = $fullNameHover . '[<i>No MI</i>].';
+					$isFullNameHoverable = true;
+				}
+				if ($nameExtension) {
+					$fullName = $fullName . ', ' . $nameExtension;
+					$fullNameHover = $fullNameHover . ', ' . $nameExtension;
+				}
+				if (strlen($fullName) > 90) {
+					$fullName = substr($fullName, 0, 90);
+					$fullName = $fullName . '...';
+					$isFullNameHoverable = true;
+				}
+				echo '<div class="col-sm-12">';
+					echo '<div class="choose-employee" data-userid="' . $userID . '">';
+						echo '<img class="rounded-circle" src="' . base_url() . $image . '" width="64" height="64">';
+						echo '<span>' . $fullName . '</span>';
+					echo '</div>';
+				echo '</div>';
+			}
+		}
+	}
 }

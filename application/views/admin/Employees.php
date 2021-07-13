@@ -230,6 +230,7 @@ if ($getLatestAttendance->num_rows() > 0) {
 <script type="text/javascript">
 $('.sidebar-admin-employees').addClass('active');
 $(document).ready(function() {
+	var toggle = false;
 	$('.employee-add-new').on('click', function() {
 		$('#NewEmployeeModal').modal('toggle');
 	});
@@ -254,6 +255,18 @@ $(document).ready(function() {
 		} else {
 			$('.login-failed-banner').hide();
 		}
+		if (toggle) {
+			$('#UpdateEmployeeToggle').trigger('click');
+		}
+		$('.currentpass-group').show();
+		$('.newpass-group').hide();
+		$('#NewLoginPassword').val('');
+		$('#RepeatNewLoginPassword').val('');
+		$('.error-saving-banner').fadeOut('fast');
+		$('.save-btn').removeClass('btn-secondary');
+		$('.save-btn').addClass('btn-success');
+		$('.save-btn').removeAttr('disabled');
+		$('.save-btn').html('<i class="bi bi-check-square"></i> Save Changes');
 		$('#UpdateEmployeeModal').modal('toggle');
 	});
 	$('#PFPInputPreview').click(function(){ $('#PFPInput').trigger('click'); });
@@ -281,15 +294,52 @@ $(document).ready(function() {
 		$('.employee-comment-input').fadeIn('fast');
 	});
 	$('#UpdateEmployeeToggle').on('change', function() {
-		let toggle = $(this).prop('checked');
+		toggle = $('#UpdateEmployeeToggle').prop('checked');
 		if (toggle) {
 			$('#UpdateEmployeeModal').find('.modal-body').find('input').each(function() {
 				$(this).attr('readonly', false);
 			});
+			$('#LoginPassword').attr('readonly', true);
+			$('.newpass-btn-group').fadeIn('fast');
 		} else {
 			$('#UpdateEmployeeModal').find('.modal-body').find('input').each(function() {
 				$(this).attr('readonly', true);
 			});
+			$('.newpass-btn-group').fadeOut('fast');
+		}
+	});
+	$('.newpass-btn').on('click', function() {
+		$('.currentpass-group').hide();
+		$('.newpass-group').fadeIn('fast');
+		$('.error-saving-banner').fadeIn('fast');
+		$('.save-btn').addClass('btn-secondary');
+		$('.save-btn').removeClass('btn-success');
+		$('.save-btn').attr('disabled', 'true');
+		$('.save-btn').html('<i class="bi bi-lock"></i> Save Changes');
+	});
+	$('#NewLoginPassword, #RepeatNewLoginPassword').bind('input', function() {
+		let newLoginPass = $('#NewLoginPassword').val();
+		let repeatLoginPass = $('#RepeatNewLoginPassword').val();
+		if (newLoginPass.length > 0 && repeatLoginPass.length > 0) {
+			if (newLoginPass == repeatLoginPass) {
+				$('.error-saving-banner').fadeOut('fast');
+				$('.save-btn').removeClass('btn-secondary');
+				$('.save-btn').addClass('btn-success');
+				$('.save-btn').removeAttr('disabled');
+				$('.save-btn').html('<i class="bi bi-check-square"></i> Save Changes');
+			} else {
+				$('.error-saving-banner').fadeIn('fast');
+				$('.save-btn').addClass('btn-secondary');
+				$('.save-btn').removeClass('btn-success');
+				$('.save-btn').attr('disabled', 'true');
+				$('.save-btn').html('<i class="bi bi-lock"></i> Save Changes');
+			}
+		} else {
+			$('.error-saving-banner').fadeIn('fast');
+			$('.save-btn').addClass('btn-secondary');
+			$('.save-btn').removeClass('btn-success');
+			$('.save-btn').attr('disabled', 'true');
+			$('.save-btn').html('<i class="bi bi-lock"></i> Save Changes');
 		}
 	});
 });

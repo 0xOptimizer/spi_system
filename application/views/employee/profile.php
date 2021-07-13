@@ -135,8 +135,10 @@ if ($getLoginCredentials->num_rows() > 0) {
 									</div>
 								</div>
 							</div>
-							<div class="row">
-								<button type="submit" class="btn btn-success w-50"><i class="bi bi-check-square"></i> Save Changes</button>
+							<div class="row mt-4">
+								<div class="col-sm-12 text-center">
+									<button type="submit" class="btn btn-success w-50"><i class="bi bi-check-square"></i> Save Changes</button>
+								</div>
 							</div>
 						</form>
 					</div>

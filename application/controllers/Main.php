@@ -38,7 +38,7 @@ class Main extends CI_Controller {
 		$email = $this->input->post('email',TRUE);
 		$password = $this->input->post('password',TRUE);
 		if ($email == NULL || $password == NULL) {
-			$p_text = '<div class="row">
+			$p_text = '<div class="row mb-1">
 							<span class="text-center warning-banner">
 								<i class="bi bi-exclamation-diamond-fill"></i> Incorrect email or password.
 							</span>
